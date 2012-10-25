@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * Implements hook_islandora_required_objects().
+ */
+function ucla_pdf_islandora_required_objects() {
+  // module path
+  $module_path = drupal_get_path('module', 'ucla_pdf');
+
+  return array(
+    'ucla_pdf' => array(
+      'title' => 'UCLA PDF',
+      'objects' => array(
+        array(
+          'pid' => 'ucla:TahrirPdfCModel',
+          'label' => 'UCLA PDF content model',
+          'cmodel' => 'fedora-system:ContentModel-3.0',
+          'datastreams' => array(
+            array(
+              'dsid' => 'DS-COMPOSITE-MODEL',
+              'label' => 'DS-COMPOSITE-MODEL',
+              'mimetype' => 'text/xml',
+              'control_group' => 'X',
+              'datastream_file' => "$module_path/xml/ucla_pdf_ds_composite_model.xml",
+            ),
+          ),
+        ),
+        array(
+          'pid' => 'islandora:ucla_pdf_collection',
+          'label' => 'Tahrir PDF collection',
+          'cmodel' => 'islandora:collectionCModel',
+          'parent' => 'islandora:root',
+          'datastreams' => array(
+            array(
+              'dsid' => 'COLLECTION_POLICY',
+              'label' => 'Collection policy',
+              'mimetype' => 'text/xml',
+              'control_group' => 'X',
+              'datastream_file' => "$module_path/xml/ucla_pdf_collection_policy.xml",
+            ),
+            array(
+              'dsid' => 'TN',
+              'label' => 'Thumbnail',
+              'mimetype' => 'image/png',
+              'control_group' => 'M',
+              'datastream_file' => "$module_path/images/folder.png",
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_islandora_content_model_forms_form_associations().
+ */
+function ucla_pdf_islandora_content_model_forms_form_associations() {
+  return array(
+    'ucla_pdf_mods_form' => array(
+      'content_model' => 'ucla:TahrirPdfCModel',
+      'form_name' => 'PDF MODS form',
+      'dsid' => 'MODS',
+      'title_field' => "['titleInfo']['title']",
+      'transform' => 'mods_to_dc.xsl',
+      'template' => FALSE,
+    ),
+  );
+}
