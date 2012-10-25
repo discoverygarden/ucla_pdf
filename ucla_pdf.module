@@ -26,7 +26,7 @@ function ucla_pdf_islandora_required_objects() {
           ),
         ),
         array(
-          'pid' => 'islandora:ucla_pdf_collection',
+          'pid' => 'ucla:tahrir_pdf_collection',
           'label' => 'Tahrir PDF collection',
           'cmodel' => 'islandora:collectionCModel',
           'parent' => 'islandora:root',
@@ -66,4 +66,59 @@ function ucla_pdf_islandora_content_model_forms_form_associations() {
       'template' => FALSE,
     ),
   );
+}
+
+/**
+ * Implements hook_islandora_pdf_islandora_get_types_alter().
+ *
+ * Add in our content model, so we are viewed the same way.
+ */
+function ucla_pdf_islandora_pdf_islandora_get_types_alter(&$types) {
+  $types['ucla:TahrirPdfCModel'][ISLANDORA_VIEW_HOOK] = TRUE;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function ucla_pdf_menu() {
+  return array(
+    'islandora/object/%islandora_object/view_translation' => array(
+      'title' => 'Translation',
+      'page callback' => 'ucla_pdf_view_text',
+      'page arguments' => array(2, 'TRANSLATION-EN'),
+      'access callback' => 'ucla_pdf_access',
+      'access arguments' => array(2, 'TRANSLATION-EN'),
+      'type' => MENU_LOCAL_TASK,
+    ),
+    'islandora/object/%islandora_object/view_transcription' => array(
+      'title' => 'Translation',
+      'page callback' => 'ucla_pdf_view_text',
+      'page arguments' => array(2, 'TRANSCRIPTION'),
+      'access callback' => 'ucla_pdf_access',
+      'access arguments' => array(2, 'TRANSCRIPTION'),
+      'type' => MENU_LOCAL_TASK,
+    ),
+    'islandora/object/%islandora_object/view_dc' => array(
+      'title' => 'DC (For testing)',
+      'page callback' => 'ucla_pdf_view_text',
+      'page arguments' => array(2, 'DC'),
+      'access callback' => 'ucla_pdf_access',
+      'access arguments' => array(2, 'DC'),
+      'type' => MENU_LOCAL_TASK,
+    ),
+  );
+}
+
+/**
+ * Check that our streams exist, before showing the paths. 
+ */
+function ucla_pdf_access($object = NULL, $dsid = NULL) {
+  return isset($object[$dsid]) && islandora_access_callback($object, FEDORA_VIEW);
+}
+
+/**
+ * Push out some text to the page, from the given object and dsid.
+ */
+function ucla_pdf_view_text($object, $dsid) {
+  return check_plain($object[$dsid]->content);
 }
