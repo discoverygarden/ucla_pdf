@@ -103,14 +103,14 @@ function ucla_pdf_menu() {
       'access arguments' => array(2, 'TRANSCRIPTION'),
       'type' => MENU_LOCAL_TASK,
     ),
-    'islandora/object/%islandora_object/view_dc' => array(
-      'title' => 'DC (For testing)',
-      'page callback' => 'ucla_pdf_view_text',
-      'page arguments' => array(2, 'DC'),
-      'access callback' => 'ucla_pdf_access',
-      'access arguments' => array(2, 'DC'),
-      'type' => MENU_LOCAL_TASK,
-    ),
+    //'islandora/object/%islandora_object/view_dc' => array(
+    //  'title' => 'DC (For testing)',
+    //  'page callback' => 'ucla_pdf_view_text',
+    //  'page arguments' => array(2, 'DC'),
+    //  'access callback' => 'ucla_pdf_access',
+    //  'access arguments' => array(2, 'DC'),
+    //  'type' => MENU_LOCAL_TASK,
+    //),
   );
 }
 
