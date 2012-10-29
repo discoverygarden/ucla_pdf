@@ -69,12 +69,17 @@ function ucla_pdf_islandora_content_model_forms_form_associations() {
 }
 
 /**
- * Implements hook_islandora_pdf_islandora_get_types_alter().
- *
- * Add in our content model, so we are viewed the same way.
+ * Implements hook_islandora_type_info().
  */
-function ucla_pdf_islandora_pdf_islandora_get_types_alter(&$types) {
-  $types['ucla:TahrirPdfCModel'][ISLANDORA_VIEW_HOOK] = TRUE;
+function ucla_pdf_islandora_type_info() {
+  return array(
+    'ucla:TahrirPdfCModel' => array(
+      'islandora_pdf' => array(
+        ISLANDORA_VIEW_HOOK => TRUE,
+        ISLANDORA_POST_INGEST_HOOK => TRUE,
+      ),
+    ),
+  );
 }
 
 /**
