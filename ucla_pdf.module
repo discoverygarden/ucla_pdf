@@ -84,7 +84,7 @@ function ucla_pdf_ucla_TahrirPdfCModel_islandora_ingest_pre_ingest($obj, $cm, $c
 function ucla_pdf_menu() {
   return array(
     'islandora/object/%islandora_object/view_translation' => array(
-      'title' => 'Translation',
+      'title' => 'Translation (English)',
       'page callback' => 'ucla_pdf_view_text',
       'page arguments' => array(2, 'TRANSLATION-EN'),
       'access callback' => 'ucla_pdf_access',
@@ -92,7 +92,7 @@ function ucla_pdf_menu() {
       'type' => MENU_LOCAL_TASK,
     ),
     'islandora/object/%islandora_object/view_transcription' => array(
-      'title' => 'Translation',
+      'title' => 'Transcription',
       'page callback' => 'ucla_pdf_view_text',
       'page arguments' => array(2, 'TRANSCRIPTION'),
       'access callback' => 'ucla_pdf_access',
@@ -114,7 +114,7 @@ function ucla_pdf_menu() {
  * Check that our streams exist, before showing the paths. 
  */
 function ucla_pdf_access($object = NULL, $dsid = NULL) {
-  return isset($object[$dsid]) && islandora_access_callback($object, FEDORA_VIEW);
+  return in_array('ucla:TahrirPdfCModel', $object->models) && isset($object[$dsid]) && islandora_access_callback($object, FEDORA_VIEW);
 }
 
 /**
