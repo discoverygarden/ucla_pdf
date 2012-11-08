@@ -29,4 +29,3 @@ function ucla_pdf_serve_text_as_file($text, $filename) {
   header("Content-Disposition: attachment; filename=\"{$filename}\"");
   echo $text;
 }
-
