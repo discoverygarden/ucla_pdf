@@ -85,7 +85,7 @@ function ucla_pdf_menu() {
   return array(
     'islandora/object/%islandora_object/view_translation' => array(
       'title' => 'Translation (English)',
-      'page callback' => 'ucla_pdf_view_text',
+      'page callback' => 'ucla_pdf_view_translation',
       'page arguments' => array(2, 'TRANSLATION-EN'),
       'access callback' => 'ucla_pdf_access',
       'access arguments' => array(2, 'TRANSLATION-EN'),
@@ -93,11 +93,19 @@ function ucla_pdf_menu() {
     ),
     'islandora/object/%islandora_object/view_transcription' => array(
       'title' => 'Transcription',
-      'page callback' => 'ucla_pdf_view_text',
+      'page callback' => 'ucla_pdf_view_transcription',
       'page arguments' => array(2, 'TRANSCRIPTION'),
       'access callback' => 'ucla_pdf_access',
       'access arguments' => array(2, 'TRANSCRIPTION'),
       'type' => MENU_LOCAL_TASK,
+    ),
+    'islandora/object/%islandora_object/download_translation' => array(
+      'title' => 'Download text',
+      'page callback' => 'ucla_pdf_download_translation',
+      'page arguments' => array(2, 'TRANSLATION-EN'),
+      'access callback' => 'ucla_pdf_access',
+      'access arguments' => array(2, 'TRANSLATION-EN'),
+      'type' => MENU_CALLBACK,
     ),
     //'islandora/object/%islandora_object/view_dc' => array(
     //  'title' => 'DC (For testing)',
@@ -112,14 +120,70 @@ function ucla_pdf_menu() {
 
 /**
  * Check that our streams exist, before showing the paths. 
+ *
+ *  @param $object - FedoraObject - Tuque object containing the datastream
+ *  @param $dsid - string - The id of the datastream in the Tuque object
  */
 function ucla_pdf_access($object = NULL, $dsid = NULL) {
   return in_array('ucla:TahrirPdfCModel', $object->models) && isset($object[$dsid]) && islandora_access_callback($object, FEDORA_VIEW);
 }
 
 /**
- * Push out some text to the page, from the given object and dsid.
+ *  Formats text from a datastream for html viewing.
+ *
+ *  @param $object - FedoraObject - Tuque object containing the datastream
+ *  @param $dsid - string - The id of the datastream in the Tuque object that contains
+ *    the text
  */
-function ucla_pdf_view_text($object, $dsid) {
+function _ucla_pdf_format_datastream_text($object, $dsid) {
   return check_plain($object[$dsid]->content);
+}
+
+/**
+ *  Serves the supplied text as a file for the user to download.
+ *
+ *  @param $text - string - The text to serve
+ *  @param $filename - string - The filename to download as (excludes
+ *    extension)
+ */
+function _ucla_pdf_serve_text_as_file($text, $filename) {
+  header("Content-type: application/octet-stream");
+  header("Content-Disposition: attachment; filename=\"{$filename}.txt\"");
+  echo $text;
+}
+
+/**
+ *  Page callback to download a string of text contained in a datastream.
+ *
+ *  @param $object - FedoraObject - Tuque object containing the datastream
+ *  @param $dsid - string - The id of the datastream in the Tuque object that contains
+ *    the text
+ */
+function ucla_pdf_download_translation($object, $dsid) {
+  _ucla_pdf_serve_text_as_file($object[$dsid]->content, $dsid);
+  return NULL;
+}
+
+/**
+ *  Page callback to view the translation of a pdf.
+ *
+ *  @param $object - FedoraObject - Tuque object containing the datastream
+ *  @param $dsid - string - The id of the datastream in the Tuque object that contains
+ *    the text
+ */
+function ucla_pdf_view_translation($object, $dsid) {
+  $out = _ucla_pdf_format_datastream_text($object, $dsid);
+  $out .= "<br/><a href='download_translation'>Download as txt</a>";
+  return $out; 
+}
+
+/**
+ *  Page callback to view the transcription of a pdf.
+ *
+ *  @param $object - FedoraObject - Tuque object containing the datastream
+ *  @param $dsid - string - The id of the datastream in the Tuque object that contains
+ *    the text
+ */
+function ucla_pdf_view_transcription($object, $dsid) {
+  return _ucla_pdf_format_datastream_text($object, $dsid);
 }
