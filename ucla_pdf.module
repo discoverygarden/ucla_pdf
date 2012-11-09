@@ -77,7 +77,6 @@ function ucla_pdf_ucla_TahrirPdfCModel_islandora_ingest_pre_ingest($obj, $cm, $c
   $obj->relationships->add(FEDORA_MODEL_URI, 'hasModel', 'islandora:sp_pdf');
 }
 
-
 /**
  * Implements hook_menu().
  */
@@ -99,14 +98,6 @@ function ucla_pdf_menu() {
       'access arguments' => array(2, 'TRANSCRIPTION'),
       'type' => MENU_LOCAL_TASK,
     ),
-    'islandora/object/%islandora_object/download_translation' => array(
-      'title' => 'Download text',
-      'page callback' => 'ucla_pdf_download_translation',
-      'page arguments' => array(2, 'TRANSLATION-EN'),
-      'access callback' => 'ucla_pdf_access',
-      'access arguments' => array(2, 'TRANSLATION-EN'),
-      'type' => MENU_CALLBACK,
-    ),
     //'islandora/object/%islandora_object/view_dc' => array(
     //  'title' => 'DC (For testing)',
     //  'page callback' => 'ucla_pdf_view_text',
@@ -121,9 +112,9 @@ function ucla_pdf_menu() {
 /**
  * Check that our streams exist, before showing the paths. 
  *
- *  @param $object FedoraObject
+ *  @param FedoraObject $object 
  *    Tuque object containing the datastream
- *  @param $dsid string
+ *  @param string $dsid
  *    The id of the datastream in the Tuque object
  */
 function ucla_pdf_access($object = NULL, $dsid = NULL) {
@@ -131,41 +122,34 @@ function ucla_pdf_access($object = NULL, $dsid = NULL) {
 }
 
 /**
- *  Page callback to download a string of text contained in a datastream.
- *
- *  @param $object FedoraObject
- *    Tuque object containing the datastream
- *  @param $dsid string
- *    The id of the datastream in the Tuque object that contains the text
- */
-function ucla_pdf_download_translation($object, $dsid) {
-  module_load_include('inc', 'ucla_pdf', 'ucla_pdf');
-  ucla_pdf_serve_text_as_file($object[$dsid]->content, "translation.txt");
-  return NULL;
-}
-
-/**
  *  Page callback to view the translation of a pdf.
  *
- *  @param $object FedoraObject
+ *  @param FedoraObject $object 
  *    Tuque object containing the datastream
- *  @param $dsid string
- *    The id of the datastream in the Tuque object that contains the text
+ *  @param string $dsid
+ *    The id of the datastream in the Tuque object containing the text
  */
 function ucla_pdf_view_translation($object, $dsid) {
+  
+  // Get the translation text from the datastrem
   module_load_include('inc', 'ucla_pdf', 'ucla_pdf');
   $out = ucla_pdf_format_datastream_text($object, $dsid);
-  $out .= "<br/><a href='download_translation'>Download as txt</a>";
+
+  // Add a link to donwload the text using Islandora's RESTful api.
+  global $base_url;
+  $download_url = $base_url . '/islandora/object/' . $object->id . '/datastream/' . $dsid . '/download';
+  $out .= "<br/><a class='ucla-pdf-link' href='{$download_url}'>Download as txt</a>";
+
   return $out; 
 }
 
 /**
  *  Page callback to view the transcription of a pdf.
  *
- *  @param $object FedoraObject
+ *  @param FedoraObject $object 
  *    Tuque object containing the datastream
- *  @param $dsid string
- *    The id of the datastream in the Tuque object that contains the text
+ *  @param string $dsid
+ *    The id of the datastream in the Tuque object containing the text
  */
 function ucla_pdf_view_transcription($object, $dsid) {
   module_load_include('inc', 'ucla_pdf', 'ucla_pdf');
