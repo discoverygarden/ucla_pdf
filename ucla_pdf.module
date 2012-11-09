@@ -135,11 +135,11 @@ function ucla_pdf_view_translation($object, $dsid) {
   module_load_include('inc', 'ucla_pdf', 'ucla_pdf');
   $out = ucla_pdf_format_datastream_text($object, $dsid);
 
-  // Add a link to donwload the text using Islandora's RESTful api.
+  // Add a link to download the text using Islandora's RESTful api.
   global $base_url;
   $download_url = $base_url . '/islandora/object/' . $object->id . '/datastream/' . $dsid . '/download';
-  $out .= "<br/><a class='ucla-pdf-link' href='{$download_url}'>Download as txt</a>";
-
+  $link_text = t('Download as txt');
+  $out .= "<br /><pre>" . l($link_text, $download_url, array('attributes' => array('class' => array('ucla-pdf-link')))) . "</pre>";
   return $out; 
 }
 
