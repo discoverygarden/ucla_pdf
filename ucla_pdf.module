@@ -139,7 +139,7 @@ function ucla_pdf_view_translation($object, $dsid) {
   global $base_url;
   $download_url = $base_url . '/islandora/object/' . $object->id . '/datastream/' . $dsid . '/download';
   $link_text = t('Download as txt');
-  $out .= "<br /><pre>" . l($link_text, $download_url, array('attributes' => array('class' => array('ucla-pdf-link')))) . "</pre>";
+  $out .= "<br />" . l($link_text, $download_url, array('attributes' => array('class' => array('ucla-pdf-link'))));
   return $out; 
 }
 
