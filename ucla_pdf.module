@@ -3,7 +3,7 @@
 /**
  * Implements hook_islandora_required_objects().
  */
-function ucla_pdf_islandora_required_objects() {
+function ucla_pdf_islandora_required_objects(IslandoraTuque $connection) {
   // module path
   $module_path = drupal_get_path('module', 'ucla_pdf');
 
@@ -53,15 +53,15 @@ function ucla_pdf_islandora_required_objects() {
 }
 
 /**
- * Implements hook_islandora_content_model_forms_form_associations().
+ * Implements hook_islandora_xml_form_builder_form_associations().
  */
-function ucla_pdf_islandora_content_model_forms_form_associations() {
+function ucla_pdf_islandora_xml_form_builder_form_associations() {
   return array(
     'ucla_pdf_mods_form' => array(
       'content_model' => 'ucla:TahrirPdfCModel',
-      'form_name' => 'PDF MODS form',
+      'form_name' => 'UCLA PDF Mods form',
       'dsid' => 'MODS',
-      'title_field' => "['titleInfo']['title']",
+      'title_field' => array('mainTitleInfo','mainTitle'),
       'transform' => 'mods_to_dc.xsl',
       'template' => FALSE,
     ),
@@ -73,7 +73,7 @@ function ucla_pdf_islandora_content_model_forms_form_associations() {
  *
  * Add in islandora:sp_pdf, so it gets handled in largely the same way.
  */
-function ucla_pdf_ucla_TahrirPdfCModel_islandora_ingest_pre_ingest($obj, $cm, $col) {
+function ucla_pdf_ucla_TahrirPdfCModel_islandora_ingest_pre_ingest($obj) {
   $obj->relationships->add(FEDORA_MODEL_URI, 'hasModel', 'islandora:sp_pdf');
 }
 
@@ -154,4 +154,19 @@ function ucla_pdf_view_translation($object, $dsid) {
 function ucla_pdf_view_transcription($object, $dsid) {
   module_load_include('inc', 'ucla_pdf', 'ucla_pdf');
   return ucla_pdf_format_datastream_text($object, $dsid);
+}
+
+/**
+ * Implements hook_islandora_ingest_steps().
+ */
+function ucla_pdf_ucla_TahrirPdfCModel_islandora_ingest_steps() {
+  return array(
+    'ucla_pdf_file_upload' => array(
+      'weight' => 10,
+      'type' => 'form',
+      'form_id' => 'islandora_pdf_pdf_upload_form',
+      'module' => 'islandora_pdf',
+      'file' => 'includes/pdf_upload.form.inc'
+    )
+  );
 }
