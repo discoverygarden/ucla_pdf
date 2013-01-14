@@ -118,7 +118,7 @@ function ucla_pdf_menu() {
  *    The id of the datastream in the Tuque object
  */
 function ucla_pdf_access($object = NULL, $dsid = NULL) {
-  return in_array('ucla:TahrirPdfCModel', $object->models) && isset($object[$dsid]) && islandora_object_access_callback($object, array(FEDORA_VIEW_OBJECTS, FEDORA_VIEW_DATASTREAMS));
+  return in_array('ucla:TahrirPdfCModel', $object->models) && isset($object[$dsid]) && islandora_object_datastream_access_callback(FEDORA_VIEW_OBJECTS, $object, $object[$dsid]);
 }
 
 /**
