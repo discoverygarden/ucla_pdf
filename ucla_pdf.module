@@ -69,12 +69,14 @@ function ucla_pdf_islandora_xml_form_builder_form_associations() {
 }
 
 /**
- * Implements hook_CMODEL_PID_islandora_ingest_pre_ingest().
+ * Implements hook_CMODEL_PID_islandora_object_alter().
  *
  * Add in islandora:sp_pdf, so it gets handled in largely the same way.
  */
-function ucla_pdf_ucla_TahrirPdfCModel_islandora_ingest_pre_ingest($obj) {
-  $obj->relationships->add(FEDORA_MODEL_URI, 'hasModel', 'islandora:sp_pdf');
+function ucla_pdf_ucla_TahrirPdfCModel_islandora_object_alter($obj, $context) {
+  if ($context['action'] == 'ingest') {
+    $obj->relationships->add(FEDORA_MODEL_URI, 'hasModel', 'islandora:sp_pdf');
+  }
 }
 
 /**
