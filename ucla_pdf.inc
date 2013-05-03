@@ -7,7 +7,7 @@
 /**
  *  Formats text from a datastream for html viewing.
  *
- *  @param $object FedoraObject
+ *  @param $object AbstractObject
  *    Tuque object containing the datastream
  *  @param $dsid string
  *    The id of the datastream in the Tuque object that contains the text
