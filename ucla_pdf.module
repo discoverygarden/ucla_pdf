@@ -114,7 +114,7 @@ function ucla_pdf_menu() {
 /**
  * Check that our streams exist, before showing the paths.
  *
- *  @param FedoraObject $object
+ *  @param AbstractObject $object
  *    Tuque object containing the datastream
  *  @param string $dsid
  *    The id of the datastream in the Tuque object
@@ -126,7 +126,7 @@ function ucla_pdf_access($object = NULL, $dsid = NULL) {
 /**
  *  Page callback to view the translation of a pdf.
  *
- *  @param FedoraObject $object
+ *  @param AbstractObject $object
  *    Tuque object containing the datastream
  *  @param string $dsid
  *    The id of the datastream in the Tuque object containing the text
@@ -148,7 +148,7 @@ function ucla_pdf_view_translation($object, $dsid) {
 /**
  *  Page callback to view the transcription of a pdf.
  *
- *  @param FedoraObject $object
+ *  @param AbstractObject $object
  *    Tuque object containing the datastream
  *  @param string $dsid
  *    The id of the datastream in the Tuque object containing the text
